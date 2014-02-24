@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/common.xhtml">
+
+	<ui:define name="pageTitle">
+		<h:outputText value="Product Search" />
+	</ui:define>
+
+	<ui:define name="content">
+		<!--  <p:button outcome="nuevaFactura" value="Crear Factura" />-->
+		<h:form id="insertFactura">
+			<p:commandButton value="Inserta" icon="ui-icon-search"
+				actionListener="#{productSearchBean.insertaFactura}"
+				update=":tablaFacturas:listaFacturas">
+			</p:commandButton>
+		</h:form>
+<h:form>
+<h:commandButton id="button" value="Download PDF" action="#{productSearchBean.downloadFile}"/>
+</h:form>
+		<p:commandButton id="dynamicDialogButton" value="Nueva Factura"
+			onclick="PF('nuevaFactura').show();" type="button"
+			icon="ui-icon-extlink">
+			<f:setPropertyActionListener
+				target="#{productSearchBean.nuevaFactura}"
+				value="#{productSearchBean.nuevaFactura}" />
+		</p:commandButton>
+
+		<p:dialog id="dialog" header="Dynamic Focus" widgetVar="nuevaFactura"
+			appendTo="@(body)">
+			<h:form id="crearFactura">
+				<p:growl id="mainGrowl3" sticky="false" />
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="nif" value="Nif" />
+					<p:inputText id="nif" label="nif" required="true"
+						value="#{productSearchBean.nuevaFactura.nif}" />
+
+					<h:outputLabel for="direccion" value="Direccion:" />
+					<p:inputText id="direccion" label="direccion" required="true"
+						value="#{productSearchBean.nuevaFactura.direccion}" />
+
+					<h:outputLabel for="fecha" value="Fecha:" />
+					<p:inputText id="fecha" label="fecha" required="true"
+						value="#{productSearchBean.nuevaFactura.fecha}" />
+
+					<h:outputLabel for="cantidad" value="Cantidad:" />
+					<p:inputText id="cantidad" label="cantidad" required="true"
+						value="#{productSearchBean.nuevaFactura.cantidad}" />
+
+					<h:outputLabel for="pagada" value="Pagada:" />
+					<p:inputText id="pagada" label="pagada" required="true"
+						value="#{productSearchBean.nuevaFactura.pagada}" />
+				</h:panelGrid>
+
+				<p:commandButton value="Insertar" icon="ui-icon-search"
+					process="@this" actionListener="#{productSearchBean.crearFactura}"
+					update="mainGrowl3" oncomplete="PF('nuevaFactura').hide();" />
+			</h:form>
+		</p:dialog>
+
+
+		<h:form id="tablaFacturas">
+			<p:growl id="mainGrowl2" sticky="false" />
+			<p:dataTable id="listaFacturas" var="fac"
+				value="#{productSearchBean.facturaList}" paginator="true" rows="10">
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="ID" />
+					</f:facet>
+					<h:outputText value="#{fac.id}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nif" />
+					</f:facet>
+					<h:outputText value="#{fac.nif}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Direccion" />
+					</f:facet>
+					<h:outputText value="#{fac.direccion}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Fecha" />
+					</f:facet>
+					<h:outputText value="#{fac.fecha}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Cantidad" />
+					</f:facet>
+					<h:outputText value="#{fac.cantidad}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Pagada" />
+					</f:facet>
+					<p:graphicImage height="25" value="/resources/image/notDone.png"
+						rendered="#{!fac.pagada}" />
+					<p:graphicImage height="25" value="/resources/image/done.png"
+						rendered="#{fac.pagada}" />
+
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Iconos" />
+					</f:facet>
+					<p:commandLink id="pdf" actionListener="#{productSearchBean.exportarPdf}"
+						ajax="true" update=":tablaFacturas:confirmDialog2">
+						<p:graphicImage height="50" value="/resources/image/pdf.png" />
+						<f:setPropertyActionListener
+							target="#{productSearchBean.selectedFactura}" value="#{fac}" />
+					</p:commandLink>
+					<p:commandLink id="edit" oncomplete="edition.show()" ajax="true"
+						update=":editionForm:editDialog" title="edit">
+						<p:graphicImage height="50" value="/resources/image/edit.png" />
+						<f:setPropertyActionListener
+							target="#{utilDaoBean.selectedFactura}" value="#{fac}" />
+					</p:commandLink>
+					<p:commandLink id="delete" oncomplete="confirmation2.show()"
+						ajax="true" update=":tablaFacturas:confirmDialog2" title="delete">
+						<p:graphicImage height="50" value="/resources/image/delete.png" />
+						<f:setPropertyActionListener
+							target="#{productSearchBean.selectedFactura}" value="#{fac}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog id="confirmDialog2"
+				message="Seguro de borrar la factura (#{productSearchBean.selectedFactura.id})?"
+				header="Borrar Factura" severity="alert" widgetVar="confirmation2">
+
+				<p:commandButton id="confirm" value="Yes"
+					update=":tablaFacturas:listaFacturas"
+					oncomplete="confirmation2.hide()"
+					actionListener="#{productSearchBean.borrarSelectedFactura}" />
+				<p:commandButton id="decline" value="No"
+					onclick="confirmation2.hide()" type="button" />
+
+			</p:confirmDialog>
+
+		</h:form>
+
+
+		<h:form id="editionForm">
+
+			<p:confirmDialog id="editDialog"
+				message="Editando #{utilDaoBean.selectedFactura.id}"
+				header="Edicion de Factura" severity="alert2" widgetVar="edition">
+
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="nifEdition" value="Nif" />
+					<p:inputText id="nifEdition" label="nifEdition"
+						value="#{utilDaoBean.selectedFactura.nif}" />
+
+					<h:outputLabel for="direccionEdition" value="Direccion:" />
+					<p:inputText id="direccionEdition" label="direccionEdition"
+						value="#{utilDaoBean.selectedFactura.direccion}" />
+
+					<h:outputLabel for="fechaEdition" value="Fecha:" />
+					<p:calendar value="#{utilDaoBean.selectedFactura.fecha}"
+						id="fechaEdition" showOn="button" label="fechaEdition"
+						required="true">
+						<f:convertDateTime pattern="dd/MM/yy" />
+					</p:calendar>
+
+					<h:outputLabel for="cantidadEdition" value="Cantidad:" />
+					<p:inputText id="cantidadEdition" label="cantidadEdition"
+						required="true" value="#{utilDaoBean.selectedFactura.cantidad}" />
+
+					<h:outputLabel for="pagadaEdition" value="Pagada:" />
+					<p:selectBooleanCheckbox id="pagadaEdition"
+						
+						value="#{utilDaoBean.selectedFactura.pagada}" />
+				</h:panelGrid>
+
+				<p:commandButton id="confirmEdition" value="Guardar"
+					actionListener="#{utilDaoBean.updateSelectedFactura}"
+					update=":tablaFacturas:listaFacturas" oncomplete="edition.hide()" />
+				<p:commandButton id="declineEdition" value="Cancelar"
+					onclick="edition.hide()" type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,105 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/common.xhtml">
+
+	<ui:define name="pageTitle">
+		<h:outputText value="Factura Search" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="mainForm">
+			<p:panel header="Validate">
+				<h:panelGrid columns="4" cellpadding="5">
+					<h:outputLabel value="Nif Autocompletar:" for="nif" />
+					<p:autoComplete id="nif" maxResults="5"
+						value="#{facturaDetailBean.selectedClient}"
+						completeMethod="#{facturaDetailBean.completeClient}" var="c"
+						converter="#{facturaDetailBean.conversorClientes}"
+						itemLabel="#{c.nif}" itemValue="#{c}">
+						<p:ajax event="itemSelect" update="address" />
+						<f:facet name="itemtip">
+							<h:panelGrid columns="2" cellpadding="5">
+								<f:facet name="header">
+									<p:graphicImage
+										value="http://es.blackberry.com/content/dam/blackBerry/images/social/linkedIn_icon.png.original.png" />
+								</f:facet>
+								<h:outputText value="Nombre: " />
+								<h:outputText id="nombre" value="#{c.nombre}" />
+								<h:outputText value="Direccion " />
+								<h:outputText id="direccion" value="#{c.direccion}" />
+								<h:outputText value="Provincia " />
+								<h:outputText id="privincia" value="#{c.provincia}" />
+							</h:panelGrid>
+						</f:facet>
+					</p:autoComplete>
+					<p:message for="nif" display="icon" />
+					<h:outputText value="#{factura.nif}" />
+
+					<h:outputLabel for="address" value="Direccion: " />
+					<p:inputText id="address"
+						value="#{facturaDetailBean.selectedClient.direccion}" />
+					<p:message for="address" display="icon" />
+					<h:outputText value="#{facturaDetailBean.selectedClient.direccion}" />
+
+					<h:outputLabel for="fecha" value="Fecha:" />
+					<p:calendar value="#{factura.fecha}" id="fecha" showOn="button"
+						required="true">
+						<f:validateLength minimum="2" />
+					</p:calendar>
+					<p:message for="fecha" display="icon" />
+					<h:outputText value="#{factura.fecha}" />
+
+					<h:outputLabel for="cantidad" value="Cantidad:" />
+					<p:inputText id="cantidad" value="#{factura.cantidad}">
+						<f:validateLength minimum="2" />
+					</p:inputText>
+					<p:message for="cantidad" display="icon" />
+					<h:outputText value="#{factura.cantidad}" />
+
+					<h:outputLabel for="pagada" value="Pagada:" />
+					<p:selectBooleanCheckbox id="pagada" value="#{factura.pagada}" />
+					<p:message for="pagada" display="icon" />
+					<h:outputText value="#{factura.pagada}" />
+
+					<p:outputPanel id="conceptoPanel">
+						<p:dataList value="#{factura.conceptos}" var="concepto"
+							type="ordered" rendered="#{factura.conceptos.size() > 0}">  
+								    #{concepto} 
+								</p:dataList>
+					</p:outputPanel>
+
+				</h:panelGrid>
+
+				<p:commandButton value="Save" ajax="false" icon="ui-icon-check"
+					validateClient="true"
+					actionListener="#{facturaDetailBean.crearFactura}">
+
+					<f:attribute name="fact" value="#{factura}" />
+				</p:commandButton>
+
+			</p:panel>
+		</h:form>
+
+		<h:form>
+			<h:outputLabel for="concepto" value="Concepto: " />
+			<p:inputText id="concepto" required="true"
+				value="#{facturaDetailBean.newConcepto}" label="Concepto" />
+			<p:commandButton value="Añadir"
+				actionListener="#{factura.añadirConceptos}"
+				icon="ui-icon-check" update=":mainForm:conceptoPanel">
+				<f:attribute name="concepto" value="#{facturaDetailBean.newConcepto}" />
+			</p:commandButton>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+
+</html>
+
