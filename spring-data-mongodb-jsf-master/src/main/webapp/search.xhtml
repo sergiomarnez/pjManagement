@@ -5,6 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
+<h:head></h:head>
 <ui:composition template="/template/common.xhtml">
 
 	<ui:define name="pageTitle">
@@ -12,40 +13,51 @@
 	</ui:define>
 
 	<ui:define name="content">
-		<p:dialog id="dialog" header="Dynamic Focus" widgetVar="nuevaFactura"
-			appendTo="@(body)">
-			<h:form id="crearFactura">
-				<p:growl id="mainGrowl3" sticky="false" />
-				<h:panelGrid columns="2" cellpadding="5">
-					<h:outputLabel for="nif" value="Nif" />
-					<p:inputText id="nif" label="nif" required="true"
-						value="#{productSearchBean.nuevaFactura.nif}" />
 
-					<h:outputLabel for="direccion" value="Direccion:" />
-					<p:inputText id="direccion" label="direccion" required="true"
-						value="#{productSearchBean.nuevaFactura.direccion}" />
+<h:form id="form">  
+  
+    <p:panel id="panel" header="New Person">  
+  
+        <p:messages id="msgs"/>  
+  
+        <h:panelGrid columns="3">  
+            <h:outputLabel for="firstname" value="Firstname: *" />  
+            <p:inputText id="firstname" value="#{personBean.firstname}" required="true" label="Firstname">  
+                <f:validateLength minimum="2" />  
+            </p:inputText>  
+            <p:message for="firstname" display="icon"/>  
+  
+            <h:outputLabel for="surname" value="Surname: *" />  
+            <p:inputText id="surname" value="#{personBean.surname}" label="Surname" required="true">  
+                <f:validateLength minimum="2" />  
+                <p:ajax update="msgSurname" event="keyup" />  
+            </p:inputText>  
+            <p:message for="surname" id="msgSurname" display="icon"/>  
+  
+        </h:panelGrid>  
+  
+        <p:commandButton id="btn" value="Save" update="panel" actionListener="#{personBean.savePerson}"/>  
+    </p:panel>  
+  
+</h:form>
 
-					<h:outputLabel for="fecha" value="Fecha:" />
-					<p:inputText id="fecha" label="fecha" required="true"
-						value="#{productSearchBean.nuevaFactura.fecha}">
-						<f:convertDateTime pattern="MM" />
-					</p:inputText>
-
-					<h:outputLabel for="cantidad" value="Cantidad:" />
-					<p:inputText id="cantidad" label="cantidad" required="true"
-						value="#{productSearchBean.nuevaFactura.cantidad}" />
-
-					<h:outputLabel for="pagada" value="Pagada:" />
-					<p:inputText id="pagada" label="pagada" required="true"
-						value="#{productSearchBean.nuevaFactura.pagada}" />
-				</h:panelGrid>
-
-				<p:commandButton value="Insertar" icon="ui-icon-search"
-					process="@this" actionListener="#{productSearchBean.crearFactura}"
-					update="mainGrowl3" oncomplete="PF('nuevaFactura').hide();" />
-			</h:form>
-		</p:dialog>
-
+		<h:form>
+			<h:outputLabel for="surname" value="Con f:ajax: *" />
+			<h:inputText id="foo" value="#{factura.nif}">
+				<f:ajax event="keyup" execute="@this" render="fooMessage" />
+				<f:validateLength minimum="2" />
+			</h:inputText>
+			<h:message id="fooMessage" for="foo" />
+		</h:form>
+		<h:form>
+			<h:outputLabel for="surname" value="Con primefaces: *" />
+			<p:inputText id="surname" value="#{factura.nif}"
+				label="Surname" required="true">
+				<f:validateLength minimum="2" />
+				<p:ajax update="msgSurname" event="keyup"  process="surname" partialSubmit="true"/>
+			</p:inputText>
+			<p:message for="surname" id="msgSurname" display="icon" />
+		</h:form>
 
 		<h:form id="tablaFacturas">
 			<p:growl id="mainGrowl2" sticky="false" />
@@ -64,13 +76,13 @@
 					<h:outputText value="#{fac.direccion}" />
 				</p:column>
 
-				<p:column  headerText="Fecha">
+				<p:column headerText="Fecha">
 					<h:outputText value="#{fac.fecha}">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</h:outputText>
 				</p:column>
 
-				<p:column  headerText="Importe">
+				<p:column headerText="Importe">
 					<h:outputText value="#{fac.cantidad}" />
 				</p:column>
 
@@ -82,7 +94,7 @@
 
 				</p:column>
 				<p:column headerText="Accion">
-					<h:commandLink id="pdf"	action="#{productSearchBean.downloadFile}"	>
+					<h:commandLink id="pdf" action="#{productSearchBean.downloadFile}">
 						<p:graphicImage height="50" value="/resources/image/pdf.png" />
 						<f:setPropertyActionListener
 							target="#{productSearchBean.selectedFactura}" value="#{fac}" />

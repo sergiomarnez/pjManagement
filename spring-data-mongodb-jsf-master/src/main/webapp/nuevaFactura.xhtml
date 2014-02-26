@@ -1,17 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/template/common.xhtml">
-
-	<ui:define name="pageTitle">
-		<h:outputText value="Factura Search" />
-	</ui:define>
-
-	<ui:define name="content">
-
+<ui:composition>
+<p:dialog id="dialogNuevaFactura" header="Nueva Factura"
+		widgetVar="facturaCreation" appendTo="@(body)">
 		<h:form id="mainForm">
 			<p:panel header="Validate">
 				<h:panelGrid columns="4" cellpadding="5">
@@ -66,17 +62,10 @@
 					<p:message for="pagada" display="icon" />
 					<h:outputText value="#{factura.pagada}" />
 
-					<p:outputPanel id="conceptoPanel">
-						<p:dataList value="#{factura.conceptos}" var="concepto"
-							type="ordered" rendered="#{factura.conceptos.size() > 0}">  
-								    #{concepto} 
-								</p:dataList>
-					</p:outputPanel>
-
 				</h:panelGrid>
-
-				<p:commandButton value="Save" ajax="false" icon="ui-icon-check"
-					validateClient="true"
+				<p:commandButton value="Insertar" ajax="true" icon="ui-icon-check"
+					validateClient="true" update=":tablaFacturas:listaFacturas"
+					oncomplete="if (#{not facesContext.validationFailed}) facturaCreation.hide()"
 					actionListener="#{facturaDetailBean.crearFactura}">
 
 					<f:attribute name="fact" value="#{factura}" />
@@ -84,22 +73,6 @@
 
 			</p:panel>
 		</h:form>
-
-		<h:form>
-			<h:outputLabel for="concepto" value="Concepto: " />
-			<p:inputText id="concepto" required="true"
-				value="#{facturaDetailBean.newConcepto}" label="Concepto" />
-			<p:commandButton value="Añadir"
-				actionListener="#{factura.añadirConceptos}"
-				icon="ui-icon-check" update=":mainForm:conceptoPanel">
-				<f:attribute name="concepto" value="#{facturaDetailBean.newConcepto}" />
-			</p:commandButton>
-
-		</h:form>
-
-	</ui:define>
+	</p:dialog>
 </ui:composition>
-
-
 </html>
-

@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Inicio" url="/search.jsf" icon="ui-icon-search" />
+			<p:menuitem value="Crear Factura"
+				onclick="facturaCreation.show()" ajax="true"
+				title="delete">
+			</p:menuitem>
+			<p:menuitem value="Crear Cliente"
+				onclick="clienteCreation.show()" ajax="true"
+				title="delete">
+			</p:menuitem>
+		</p:menubar>
+	</h:form>
+
+
+	<ui:include src="/nuevaFactura.xhtml" />
+	<ui:include src="/nuevoCliente.xhtml" />
+
+	
+</ui:composition>
+</html>

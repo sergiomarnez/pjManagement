@@ -9,34 +9,41 @@
 	<h:head>
 
 		<f:facet name="first">
-			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<title><ui:insert name="pageTitle">Page Title</ui:insert></title>
 			<ui:insert name="head" />
 		</f:facet>
-		
-		      
+
+		<h:head>
+			<h:outputStylesheet name="common-style.css" library="css" />
+		</h:head>
+
 	</h:head>
 
 	<h:body>
-		<div style="margin:auto;width:85%;">
-			<div id="header" class="ui-widget" >
-				<div id="logo" style="border:1px  solid #acbece; border-bottom: none; ">
-					<p:graphicImage  style="width: 100%" value="/resources/image/logo.png"/>					   
+		<div style="margin: auto; width: 85%;">
+			<div id="header" class="ui-widget">
+				<div id="logo"
+					style="border: 1px solid #acbece; border-bottom: none;">
+					<p:graphicImage style="width: 100%"
+						value="/resources/image/logo.png" />
 				</div>
-				<div id="logo" style="border:1px solid #acbece;">
-				   <p:menubar style="border:none"> 					   	
-						<p:menuitem value="Inicio" url="/search.jsf" icon="ui-icon-search" /> 
-						<p:menuitem value="Nueva Factura" url="/nuevaFactura.jsf" icon="ui-icon-document" />
-						<p:menuitem value="Nuevo Cliente" url="/nuevoCliente.jsf" icon="ui-icon-document" />
-					</p:menubar>
+				<div id="logo" style="border: 1px solid #acbece;">
 				</div>
 			</div>
-	
-	        <div id="page" class="ui-widget" style="overflow:hidden;">
-	            <div id="content"  style="display:block">
-	               <ui:insert name="content">...</ui:insert>     
-	            </div>
-	        </div>
+
+			<div id="menu" class="ui-widget" style="overflow: hidden;">
+				<div id="dialogs" style="display: block">
+					<ui:include src="/menu.xhtml" />
+				</div>
+			</div>
+
+
+			<div id="page" class="ui-widget" style="overflow: hidden;">
+				<div id="content" style="display: block">
+					<ui:insert name="content">...</ui:insert>
+				</div>
+			</div>
 		</div>
 	</h:body>
 

@@ -1,23 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/template/common.xhtml">
-
-	<ui:define name="pageTitle">
-		<h:outputText value="Cliente Search" />
-	</ui:define>
-
-	<ui:define name="content">
-
+<ui:composition>
+	<script type="text/javascript">
+    function handleDialogSubmit(xhr, status, args) {
+        if (args.validationFailed) {
+        	clienteCreation.show();
+        } else {
+        	clienteCreation.hide();
+        }
+    }
+</script>
+	<p:dialog id="dialogNuevoCliente" header="Nuevo Cliente"
+		widgetVar="clienteCreation">
 		<h:form>
-			<p:panel header="Validate">
 				<h:panelGrid columns="4" cellpadding="5">
 					<h:outputLabel for="nif" value="Nif: " />
 					<p:inputText id="nif" value="#{cliente.nif}" required="true">
-						<f:validateLength minimum="2" />
+
 					</p:inputText>
 					<p:message for="nif" display="icon" />
 					<h:outputText value="#{cliente.nif}" />
@@ -33,24 +37,30 @@
 					<h:outputText value="#{cliente.direccion}" />
 
 					<h:outputLabel for="provincia" value="Provincia: " />
-					<h:selectOneMenu id="provincia" value="#{cliente.provincia}" required="true">
+					<h:selectOneMenu id="provincia" value="#{cliente.provincia}"
+						required="true">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems value="#{productSearchBean.pronviciasList}" />
 					</h:selectOneMenu>
 					<p:message for="provincia" />
 					<h:outputText value="#{cliente.provincia}" />
-
+					<h:outputText value="#{facesContext.maximumSeverity}" />
 
 				</h:panelGrid>
 
-				<p:commandButton value="Save" ajax="false" icon="ui-icon-check"
-					validateClient="true"
-					actionListener="#{cliente.crearCliente}">
-					<f:attribute name="client" value="#{cliente}" />
+				<p:commandButton id="saveButton" icon="ui-icon-disk"
+					value="Guardar Cliente" update="@form"
+					ajax="true"
+					actionListener="#{cliente.crearCliente}"
+					oncomplete="if (!args.validationFailed) editDialog.hide()" >
+					<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 				</p:commandButton>
-			</p:panel>
+				<p:commandButton value="Limpiar" update="@form" process="@this">
+					<p:resetInput target="@form" />
+				</p:commandButton>
 		</h:form>
-
-	</ui:define>
+	</p:dialog>
 </ui:composition>
+
+
 </html>

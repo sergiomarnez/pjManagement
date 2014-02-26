@@ -61,9 +61,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.primefaces.themes</groupId>
-			<artifactId>all-themes</artifactId>
-			<version>1.0.10</version>
+			<groupId>org.omnifaces</groupId>
+			<artifactId>omnifaces</artifactId>
+			<version>1.7</version> <!-- Or 1.8-SNAPSHOT -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
