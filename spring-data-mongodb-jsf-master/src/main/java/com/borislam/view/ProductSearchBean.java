@@ -75,7 +75,7 @@ public class ProductSearchBean implements Serializable{
     	
     	URL location = ProductSearchBean.class.getProtectionDomain().getCodeSource().getLocation();
     	System.out.println("Actual location: "+location.getPath());
-    	File ficheroXLS = new File("C:/Users/Sergio/workspace/spring-data-mongodb-jsf-master/src/main/webapp/resources/pdf/plantilla.pdf");
+    	File ficheroXLS = new File("C:/Users/pjavier/git/pjManagement/spring-data-mongodb-jsf-master/src/main/webapp/resources/pdf/plantilla.pdf");
     	FacesContext ctx = FacesContext.getCurrentInstance();
     	FileInputStream fis = new FileInputStream(ficheroXLS);
     	byte[] bytes = new byte[1000];
