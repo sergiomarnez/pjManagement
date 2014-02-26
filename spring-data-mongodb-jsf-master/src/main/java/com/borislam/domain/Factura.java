@@ -25,7 +25,7 @@ import com.borislam.config.SpringMongoConfig;
 
 @Document(collection = "factura")
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class Factura implements Serializable{
 
 	@Id

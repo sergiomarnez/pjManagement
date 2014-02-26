@@ -1,5 +1,7 @@
 package com.borislam.domain;
 
+import java.io.Serializable;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
@@ -17,7 +19,7 @@ import com.borislam.config.SpringMongoConfig;
 @Document(collection = "cliente")
 @ManagedBean
 @RequestScoped
-public class Cliente {
+public class Cliente implements Serializable{
 
 	@Id
 	private String nif;
@@ -68,17 +70,15 @@ public class Cliente {
 	}
 	
 	public void crearCliente(ActionEvent event){	
+		System.out.println("Creo Cliente");
+		
+		Cliente c = this;
 
-		Cliente c = (Cliente)event.getComponent().getAttributes().get("client");
-
-		if(c==null){
-			System.out.println("Cliente vacia ");
-		}else{
 			ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfig.class);
 			MongoOperations mongoOperation = (MongoOperations) ctx.getBean("mongoTemplate");
 			System.out.println("NuevaFactura NO vacia : "+c.getNif());
 			mongoOperation.save(c);
 			c = new Cliente();
-		}
+		
 	}
 }
