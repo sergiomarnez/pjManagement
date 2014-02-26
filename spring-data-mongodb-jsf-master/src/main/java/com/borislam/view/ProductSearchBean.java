@@ -392,8 +392,8 @@ public class ProductSearchBean implements Serializable{
 	
 	public void crearFactura(ActionEvent event){	
 
-		Factura f2 = (Factura)event.getComponent().getAttributes().get("fact");
-		Factura f = nuevaFactura;
+		Factura f = (Factura)event.getComponent().getAttributes().get("fact");
+
 		if(selectedClient!=null){
 
 			if(f==null){
