@@ -14,51 +14,6 @@
 
 	<ui:define name="content">
 
-<h:form id="form">  
-  
-    <p:panel id="panel" header="New Person">  
-  
-        <p:messages id="msgs"/>  
-  
-        <h:panelGrid columns="3">  
-            <h:outputLabel for="firstname" value="Firstname: *" />  
-            <p:inputText id="firstname" value="#{personBean.firstname}" required="true" label="Firstname">  
-                <f:validateLength minimum="2" />  
-            </p:inputText>  
-            <p:message for="firstname" display="icon"/>  
-  
-            <h:outputLabel for="surname" value="Surname: *" />  
-            <p:inputText id="surname" value="#{personBean.surname}" label="Surname" required="true">  
-                <f:validateLength minimum="2" />  
-                <p:ajax update="msgSurname" event="keyup" />  
-            </p:inputText>  
-            <p:message for="surname" id="msgSurname" display="icon"/>  
-  
-        </h:panelGrid>  
-  
-        <p:commandButton id="btn" value="Save" update="panel" actionListener="#{personBean.savePerson}"/>  
-    </p:panel>  
-  
-</h:form>
-
-		<h:form>
-			<h:outputLabel for="surname" value="Con f:ajax: *" />
-			<h:inputText id="foo" value="#{factura.nif}">
-				<f:ajax event="keyup" execute="@this" render="fooMessage" />
-				<f:validateLength minimum="2" />
-			</h:inputText>
-			<h:message id="fooMessage" for="foo" />
-		</h:form>
-		<h:form>
-			<h:outputLabel for="surname" value="Con primefaces: *" />
-			<p:inputText id="surname" value="#{factura.nif}"
-				label="Surname" required="true">
-				<f:validateLength minimum="2" />
-				<p:ajax update="msgSurname" event="keyup"  process="surname" partialSubmit="true"/>
-			</p:inputText>
-			<p:message for="surname" id="msgSurname" display="icon" />
-		</h:form>
-
 		<h:form id="tablaFacturas">
 			<p:growl id="mainGrowl2" sticky="false" />
 			<p:dataTable id="listaFacturas" var="fac" style="margin-top: 10px;"
@@ -149,7 +104,7 @@
 					<p:calendar value="#{utilDaoBean.selectedFactura.fecha}"
 						id="fechaEdition" showOn="button" label="fechaEdition"
 						required="true">
-						<f:convertDateTime pattern="dd/MM/yy" />
+						<f:convertDateTime pattern="MM/dd/yy" />
 					</p:calendar>
 
 					<h:outputLabel for="cantidadEdition" value="Cantidad:" />

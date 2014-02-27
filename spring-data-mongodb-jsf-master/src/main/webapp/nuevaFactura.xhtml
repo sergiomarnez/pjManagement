@@ -6,72 +6,93 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-<p:dialog id="dialogNuevaFactura" header="Nueva Factura"
+	<p:dialog id="dialogNuevaFactura" header="Nueva Factura"
 		widgetVar="facturaCreation" appendTo="@(body)">
 		<h:form id="mainForm">
-			<p:panel header="Validate">
-				<h:panelGrid columns="4" cellpadding="5">
-					<h:outputLabel value="Nif Autocompletar:" for="nif" />
-					<p:autoComplete id="nif" maxResults="5"
-						value="#{facturaDetailBean.selectedClient}"
-						completeMethod="#{facturaDetailBean.completeClient}" var="c"
-						converter="#{facturaDetailBean.conversorClientes}"
-						itemLabel="#{c.nif}" itemValue="#{c}">
-						<p:ajax event="itemSelect" update="address" />
-						<f:facet name="itemtip">
-							<h:panelGrid columns="2" cellpadding="5">
-								<f:facet name="header">
-									<p:graphicImage
-										value="http://es.blackberry.com/content/dam/blackBerry/images/social/linkedIn_icon.png.original.png" />
-								</f:facet>
-								<h:outputText value="Nombre: " />
-								<h:outputText id="nombre" value="#{c.nombre}" />
-								<h:outputText value="Direccion " />
-								<h:outputText id="direccion" value="#{c.direccion}" />
-								<h:outputText value="Provincia " />
-								<h:outputText id="privincia" value="#{c.provincia}" />
-							</h:panelGrid>
-						</f:facet>
-					</p:autoComplete>
-					<p:message for="nif" display="icon" />
-					<h:outputText value="#{factura.nif}" />
+			<h:panelGrid columns="3" cellpadding="4">
+				<h:outputLabel value="Nif Autocompletar:" for="nif" />
+				<p:autoComplete id="nif" maxResults="5"
+					value="#{facturaDetailBean.selectedClient}"
+					completeMethod="#{facturaDetailBean.completeClient}" var="c"
+					converter="#{facturaDetailBean.conversorClientes}"
+					itemLabel="#{c.nif}" itemValue="#{c}">
+					<p:ajax event="itemSelect" update="address" />
+					<f:facet name="itemtip">
+						<h:panelGrid columns="2" cellpadding="5">
+							<f:facet name="header">
+								<p:graphicImage
+									value="http://es.blackberry.com/content/dam/blackBerry/images/social/linkedIn_icon.png.original.png" />
+							</f:facet>
+							<h:outputText value="Nombre: " />
+							<h:outputText id="nombre" value="#{c.nombre}" />
+							<h:outputText value="Direccion " />
+							<h:outputText id="direccion" value="#{c.direccion}" />
+							<h:outputText value="Provincia " />
+							<h:outputText id="privincia" value="#{c.provincia}" />
+						</h:panelGrid>
+					</f:facet>
+				</p:autoComplete>
+				<p:message for="nif" display="icon" />
 
-					<h:outputLabel for="address" value="Direccion: " />
-					<p:inputText id="address"
-						value="#{facturaDetailBean.selectedClient.direccion}" />
-					<p:message for="address" display="icon" />
-					<h:outputText value="#{facturaDetailBean.selectedClient.direccion}" />
+				<h:outputLabel for="address" value="Direccion: " />
+				<p:inputText id="address"
+					value="#{facturaDetailBean.selectedClient.direccion}" />
+				<p:message for="address" display="icon" />
 
-					<h:outputLabel for="fecha" value="Fecha:" />
-					<p:calendar value="#{factura.fecha}" id="fecha" showOn="button"
-						required="true">
-						<f:validateLength minimum="2" />
-					</p:calendar>
-					<p:message for="fecha" display="icon" />
-					<h:outputText value="#{factura.fecha}" />
+				<h:outputLabel for="fecha" value="Fecha:" />
+				<p:calendar value="#{factura.fecha}" id="fecha" showOn="button">
+				</p:calendar>
+				<p:message for="fecha" display="icon" />
 
-					<h:outputLabel for="cantidad" value="Cantidad:" />
-					<p:inputText id="cantidad" value="#{factura.cantidad}">
-						<f:validateLength minimum="2" />
-					</p:inputText>
-					<p:message for="cantidad" display="icon" />
-					<h:outputText value="#{factura.cantidad}" />
+				<h:outputLabel for="cantidad" value="Cantidad:" />
+				<p:inputText id="cantidad" value="#{factura.cantidad}">
+					<f:validateLength minimum="2" />
+				</p:inputText>
+				<p:message for="cantidad" display="icon" />
 
-					<h:outputLabel for="pagada" value="Pagada:" />
-					<p:selectBooleanCheckbox id="pagada" value="#{factura.pagada}" />
-					<p:message for="pagada" display="icon" />
-					<h:outputText value="#{factura.pagada}" />
+				<h:outputLabel for="pagada" value="Pagada:" />
+				<p:selectBooleanCheckbox id="pagada" value="#{factura.pagada}" />
+				<p:message for="pagada" display="icon" />
 
-				</h:panelGrid>
-				<p:commandButton value="Insertar" ajax="true" icon="ui-icon-check"
-					validateClient="true" update=":tablaFacturas:listaFacturas"
-					oncomplete="if (#{not facesContext.validationFailed}) facturaCreation.hide()"
-					actionListener="#{facturaDetailBean.crearFactura}">
+			</h:panelGrid>
 
-					<f:attribute name="fact" value="#{factura}" />
-				</p:commandButton>
 
-			</p:panel>
+
+
+			<p:commandButton value="Add" action="#{factura.addConcepto}"
+				update="panelConceptos" />
+
+
+			<p:panelGrid id="panelConceptos" columns="1" cellpadding="4">
+				<ui:repeat value="#{factura.conceptos}" varStatus="status">
+					<p:panel>
+						<h:outputLabel value="Concepto:" />
+						<p:inputText value="#{factura.conceptos[status.index].concepto}" />
+						<h:outputLabel value="Importe:" />
+						<p:inputText value="#{factura.conceptos[status.index].importe}" />
+						<p:commandLink actionListener="#{factura.deleteConcepto}"
+							update=":mainForm:panelConceptos" rendered="#{factura.conceptos.size()>1}">
+							<p:graphicImage height="25" value="/resources/image/notDone.png" />
+							<f:attribute name="concepto"
+								value="#{factura.conceptos[status.index]}" />
+						</p:commandLink>
+					</p:panel>
+				</ui:repeat>
+			</p:panelGrid>
+			<p:commandLink action="#{factura.addConcepto}"
+				update="panelConceptos">
+				<p:graphicImage height="25" value="/resources/image/done.png" />
+			</p:commandLink>
+
+			<p:commandButton value="Insertar" ajax="false" icon="ui-icon-check"
+				update=":tablaFacturas:listaFacturas"
+				oncomplete="if (!args.validationFailed) facturaCreation.hide()"
+				actionListener="#{factura.crearFactura}">
+				<f:attribute name="cliente"
+					value="#{facturaDetailBean.selectedClient}" />
+				<f:actionListener
+					type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+			</p:commandButton>
 		</h:form>
 	</p:dialog>
 </ui:composition>

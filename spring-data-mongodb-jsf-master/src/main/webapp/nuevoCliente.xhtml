@@ -52,7 +52,7 @@
 					value="Guardar Cliente" update="@form"
 					ajax="true"
 					actionListener="#{cliente.crearCliente}"
-					oncomplete="if (!args.validationFailed) editDialog.hide()" >
+					oncomplete="if (!args.validationFailed) clienteCreation.hide()" >
 					<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 				</p:commandButton>
 				<p:commandButton value="Limpiar" update="@form" process="@this">

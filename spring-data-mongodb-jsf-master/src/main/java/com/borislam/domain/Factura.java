@@ -1,10 +1,12 @@
 package com.borislam.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
@@ -18,6 +20,7 @@ import javax.validation.constraints.Size;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,38 +28,43 @@ import com.borislam.config.SpringMongoConfig;
 
 @Document(collection = "factura")
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class Factura implements Serializable{
 
 	@Id
 	private String id;
- 
+
 	@Size(min=2,max=5)
 	private String nif; 
 	@Size(min=2,max=5)
 	private String direccion;
-	
-	
+
+
 	private Date fecha;
-	
+
 	@DecimalMin(value= "0.0", message = "Shold not exceed 99.9") 
 	private Double cantidad; 
 	private Boolean pagada;
-	private List<String> conceptos;
-	
-	
+	private List<Concepto> conceptos;	
+
 	public Factura(){
-		
+
 	}
-	
-	public List<String> getConceptos() {
+
+	@PostConstruct
+	public void initConceptos() {    	
+		conceptos = new ArrayList<Concepto>();
+		conceptos.add(new Concepto("",Double.valueOf(0)));
+	}
+
+	public List<Concepto> getConceptos() {
 		return conceptos;
 	}
 
-	public void setConceptos(List<String> conceptos) {
+	public void setConceptos(List<Concepto> conceptos) {
 		this.conceptos = conceptos;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -94,15 +102,43 @@ public class Factura implements Serializable{
 		this.pagada = pagada;
 	}
 
-	
-	public void  añadirConceptos(ActionEvent event) {
-		System.out.println("Añado concepto: ");
-		String concepto = (String)event.getComponent().getAttributes().get("concepto");
-		
-		this.conceptos.add(concepto);
-		System.out.println("Añado concepto: "+concepto);
+	public void crearFactura(ActionEvent event){	
+		System.out.println("asdf");
+		Cliente selectedClient = (Cliente)event.getComponent().getAttributes().get("cliente");
+		//Factura f = (Factura)event.getComponent().getAttributes().get("fact");
+		Factura f = this;
+		System.out.println("factura NO vacia : "+f.getNif());
+		if(selectedClient!=null){
 
+			ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfig.class);
+			MongoOperations mongoOperation = (MongoOperations) ctx.getBean("mongoTemplate");
+			System.out.println("factura NO vacia : "+f.getNif());
+			Factura factura = f;
+			Random randomGenerator = new Random();
+			String id = "Factura"+String.valueOf(randomGenerator.nextInt(10000));
+			f.setNif(selectedClient.getNif());
+			f.setDireccion(selectedClient.getDireccion());
+			f.setId(id);
+			mongoOperation.save(factura);
+
+		}
 	}
+
+	public void addConcepto() {
+		conceptos.add(new Concepto("",Double.valueOf(0)));
+	}
+	
+	public void deleteConcepto(ActionEvent event) {
+		Concepto selectedConcept = (Concepto)event.getComponent().getAttributes().get("concepto");
+		System.out.println("Borrando el concepto: "+selectedConcept.getConcepto());
+		conceptos.remove(selectedConcept);
+		/*for(Concepto p : conceptos){
+			if(selectedConcept.getConcepto().equals(p.getConcepto())&&selectedConcept.getImporte()==p.getImporte()){
+				
+			}
+		}*/
+	}
+
 }
 
 

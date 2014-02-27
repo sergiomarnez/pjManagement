@@ -33,7 +33,7 @@ import com.borislam.domain.Product;
 
 @Component
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class FacturaDetailBean implements Serializable{
 
 	/**
