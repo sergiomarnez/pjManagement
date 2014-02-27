@@ -1,1 +1,6 @@
 /.settings
+/target
+/.metadata
+/bin
+/Users
+/.classpath
