@@ -5,10 +5,17 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import com.mongodb.BasicDBObject;
+
 @ManagedBean
 @ViewScoped
 public class Concepto implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String concepto;
 	private Double importe;
 	

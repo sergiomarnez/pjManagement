@@ -15,7 +15,8 @@
 	<ui:define name="content">
 
 		<h:form id="tablaFacturas">
-			<p:growl id="mainGrowl2" sticky="false" />
+			<p:messages id="messages" globalOnly="true" autoUpdate="true"
+				closable="true" />
 			<p:dataTable id="listaFacturas" var="fac" style="margin-top: 10px;"
 				value="#{productSearchBean.facturaList}" paginator="true" rows="10">
 
@@ -85,20 +86,21 @@
 		</h:form>
 
 
-		<h:form id="editionForm">
-
-			<p:confirmDialog id="editDialog"
+		<h:form id="editionForm" binding="#{editionFacturaForm}">
+			<p:dialog id="editDialog"
+				visible="#{editionFacturaForm.submitted and facesContext.validationFailed}"
 				message="Editando #{utilDaoBean.selectedFactura.id}"
 				header="Edicion de Factura" severity="alert2" widgetVar="edition">
 
 				<h:panelGrid columns="2" cellpadding="5">
 					<h:outputLabel for="nifEdition" value="Nif" />
-					<p:inputText id="nifEdition" label="nifEdition"
-						value="#{utilDaoBean.selectedFactura.nif}" />
+					<p:inputText id="nifEdition" label="nifEdition" required="true"
+						value="#{utilDaoBean.selectedFactura.nif}">
+					</p:inputText>
 
 					<h:outputLabel for="direccionEdition" value="Direccion:" />
 					<p:inputText id="direccionEdition" label="direccionEdition"
-						value="#{utilDaoBean.selectedFactura.direccion}" />
+						value="#{utilDaoBean.selectedFactura.direccion}" required="true" />
 
 					<h:outputLabel for="fechaEdition" value="Fecha:" />
 					<p:calendar value="#{utilDaoBean.selectedFactura.fecha}"
@@ -107,21 +109,41 @@
 						<f:convertDateTime pattern="MM/dd/yy" />
 					</p:calendar>
 
-					<h:outputLabel for="cantidadEdition" value="Cantidad:" />
-					<p:inputText id="cantidadEdition" label="cantidadEdition"
-						required="true" value="#{utilDaoBean.selectedFactura.cantidad}" />
-
 					<h:outputLabel for="pagadaEdition" value="Pagada:" />
 					<p:selectBooleanCheckbox id="pagadaEdition"
 						value="#{utilDaoBean.selectedFactura.pagada}" />
 				</h:panelGrid>
 
+				<p:panelGrid id="panelConceptos" columns="1" cellpadding="4">
+					<ui:repeat value="#{utilDaoBean.selectedFactura.conceptos}" varStatus="status">
+						<p:panel>
+							<h:outputLabel value="Concepto:" />
+							<p:inputText value="#{utilDaoBean.selectedFactura.conceptos[status.index].concepto}" />
+							<h:outputLabel value="Importe:" />
+							<p:inputText value="#{utilDaoBean.selectedFactura.conceptos[status.index].importe}" />
+							<p:commandLink actionListener="#{utilDaoBean.selectedFactura.deleteConcepto}"
+								update=":editionForm:panelConceptos"
+								rendered="#{utilDaoBean.selectedFactura.conceptos.size()>1}">
+								<p:graphicImage height="25" value="/resources/image/notDone.png" />
+								<f:attribute name="concepto"
+									value="#{utilDaoBean.selectedFactura.conceptos[status.index]}" />
+							</p:commandLink>
+						</p:panel>
+					</ui:repeat>
+				</p:panelGrid>
+				<p:commandLink actionListener="#{utilDaoBean.addConcepto}"
+					update=":editionForm:panelConceptos">
+					<p:graphicImage height="25" value="/resources/image/add.png" />
+				</p:commandLink>
+
 				<p:commandButton id="confirmEdition" value="Guardar"
-					actionListener="#{utilDaoBean.updateSelectedFactura}"
-					update=":tablaFacturas:listaFacturas" oncomplete="edition.hide()" />
+					actionListener="#{utilDaoBean.updateSelectedFactura}" ajax="false"
+					update=":tablaFacturas:listaFacturas" oncomplete="edition.hide()">
+					<f:actionListener type="com.borislam.utils.CleanForms" />
+				</p:commandButton>
 				<p:commandButton id="declineEdition" value="Cancelar"
 					onclick="edition.hide()" type="button" />
-			</p:confirmDialog>
+			</p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>

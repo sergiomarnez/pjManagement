@@ -16,8 +16,8 @@
     }
 </script>
 	<p:dialog id="dialogNuevoCliente" header="Nuevo Cliente"
-		widgetVar="clienteCreation">
-		<h:form>
+		widgetVar="clienteCreation" visible="#{newClientForm.submitted and facesContext.validationFailed}">
+		<h:form binding="#{newClientForm}">
 				<h:panelGrid columns="4" cellpadding="5">
 					<h:outputLabel for="nif" value="Nif: " />
 					<p:inputText id="nif" value="#{cliente.nif}" required="true">
@@ -32,7 +32,7 @@
 					<h:outputText value="#{cliente.nombre}" />
 
 					<h:outputLabel for="address" value="Direccion: " />
-					<p:inputText id="address" value="#{cliente.direccion}" />
+					<p:inputText id="address" value="#{cliente.direccion}" required="true"/>
 					<p:message for="address" display="icon" />
 					<h:outputText value="#{cliente.direccion}" />
 
@@ -50,7 +50,7 @@
 
 				<p:commandButton id="saveButton" icon="ui-icon-disk"
 					value="Guardar Cliente" update="@form"
-					ajax="true"
+					ajax="false"
 					actionListener="#{cliente.crearCliente}"
 					oncomplete="if (!args.validationFailed) clienteCreation.hide()" >
 					<f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />

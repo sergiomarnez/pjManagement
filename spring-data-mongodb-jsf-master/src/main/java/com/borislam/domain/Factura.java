@@ -124,7 +124,7 @@ public class Factura implements Serializable{
 		}
 	}
 
-	public void addConcepto() {
+	public void addConcepto(ActionEvent event) {
 		conceptos.add(new Concepto("",Double.valueOf(0)));
 	}
 	

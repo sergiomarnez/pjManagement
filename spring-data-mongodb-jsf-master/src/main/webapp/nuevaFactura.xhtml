@@ -71,7 +71,8 @@
 						<h:outputLabel value="Importe:" />
 						<p:inputText value="#{factura.conceptos[status.index].importe}" />
 						<p:commandLink actionListener="#{factura.deleteConcepto}"
-							update=":mainForm:panelConceptos" rendered="#{factura.conceptos.size()>1}">
+							update=":mainForm:panelConceptos"
+							rendered="#{factura.conceptos.size()>1}">
 							<p:graphicImage height="25" value="/resources/image/notDone.png" />
 							<f:attribute name="concepto"
 								value="#{factura.conceptos[status.index]}" />
@@ -79,9 +80,9 @@
 					</p:panel>
 				</ui:repeat>
 			</p:panelGrid>
-			<p:commandLink action="#{factura.addConcepto}"
-				update="panelConceptos">
-				<p:graphicImage height="25" value="/resources/image/done.png" />
+			<p:commandLink actionListener="#{factura.addConcepto}"
+				update=":mainForm:panelConceptos">
+				<p:graphicImage height="25" value="/resources/image/add.png" />
 			</p:commandLink>
 
 			<p:commandButton value="Insertar" ajax="false" icon="ui-icon-check"

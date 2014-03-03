@@ -69,6 +69,11 @@
 		<param-name>primefaces.THEME</param-name>
 		<param-value>glass-x</param-value>
 	</context-param>
+	
+	<error-page>
+    <error-code>500</error-code>
+    <location>/WEB-INF/error.html</location>
+</error-page>
 
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
